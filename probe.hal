@@ -14,7 +14,7 @@ loadrt timedelay
 
 addf demux.0  servo-thread
 addf probe_s32_u32  servo-thread
-addf and2.0 servo-thread
+addf and2.1 servo-thread
 addf timedelay.0 servo-thread
 
 setp timedelay.0.on-delay 0
@@ -23,7 +23,7 @@ setp timedelay.0.off-delay 1
 net m-type motion.motion-type probe_s32_u32.in
 net m-type-u probe_s32_u32.out demux.0.sel-u32
 net probing demux.0.out-05 timedelay.0.in 
-net probing-delayed timedelay.0.out and2.0.in0
+net probing-delayed timedelay.0.out and2.1.in0
 
 
 # vers probe
@@ -40,8 +40,8 @@ net toolsetter-in => or2.1.in1
 
 
 # ----- Disable on cutting
-net 3dprobe-or-toolsetter <= or2.1.out => and2.0.in1
-net checked-probe and2.0.out motion.probe-input
+net 3dprobe-or-toolsetter <= or2.1.out => and2.1.in1
+net checked-probe and2.1.out motion.probe-input
 
 
 
