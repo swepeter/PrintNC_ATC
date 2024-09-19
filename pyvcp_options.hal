@@ -4,7 +4,8 @@
 
 # **** Setup of spindle speed display using pyvcp -START ****
 
-net spindle-vel-cmd-rpm-abs    =>    vfd.spindle-speed
+#net spindle-vel-cmd-rpm-abs    =>    vfd.spindle-speed
+net spindle-vel-cmd-rpm-abs    =>    vfd.speed-command
 net spindle-at-speed        =>    pyvcp.spindle-at-speed-led
 
 # **** Setup of spindle speed display using pyvcp -END ****
