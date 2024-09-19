@@ -9,7 +9,7 @@ setp debounce.0.delay 50
 # disable on cutting
 loadrt demux personality=7
 #loadrt conv_s32_u32 names=probe_s32_u32
-loadrt and2 count=1
+#loadrt and2 count=1
 loadrt timedelay
 
 addf demux.0  servo-thread
