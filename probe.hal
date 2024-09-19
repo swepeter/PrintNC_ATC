@@ -1,7 +1,7 @@
 #  ---probe signal or tool height sensor---
-loadrt or2 count=1
+loadrt or3 count=1
 loadrt debounce cfg=2
-addf or2.0  servo-thread
+addf or3.0  servo-thread
 addf debounce.0 servo-thread
 setp debounce.0.delay 50
 
@@ -29,18 +29,18 @@ net probing-delayed timedelay.0.out and2.0.in0
 # vers probe
 net db-3dprobe-in debounce.0.0.in [HMOT](CARD0).inmux.00.input-06
 net 3dprobe-in debounce.0.0.out
-net 3dprobe-in => or2.0.in0
+net 3dprobe-in => or3.0.in0
 
 #   ----Tool setter
 net db-toolsetter-in debounce.0.1.in [HMOT](CARD0).inmux.00.input-05-not
 net toolsetter-in debounce.0.1.out
-net toolsetter-in => or2.0.in1
+net toolsetter-in => or3.0.in1
 
-#net 3dprobe-or-toolsetter <= or2.0.out => motion.probe-input
+#net 3dprobe-or-toolsetter <= or3.0.out => motion.probe-input
 
 
 # ----- Disable on cutting
-net 3dprobe-or-toolsetter <= or2.0.out => and2.0.in1
+net 3dprobe-or-toolsetter <= or3.0.out => and2.0.in1
 net checked-probe and2.0.out motion.probe-input
 
 
