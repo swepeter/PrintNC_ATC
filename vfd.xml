@@ -1,23 +1,5 @@
 <pyvcp>
-    <label text="HomeX"/>
-    <led>
-    	<halpin>"homex"</halpin>
-    </led>
-    
-    <label text="HomeY"/>
-    <led>
-	    <halpin>"homey"</halpin>
-    </led>
-        
-    <label text="HomeZ"/>
-    <led>
-	    <halpin>"homez"</halpin>
-    </led>
-    
-
 <labelframe text="config">
-
-
     <meter>
         <halpin>"rpm-out"</halpin>
         <text>"Spindle"</text>
@@ -37,27 +19,24 @@
         <led halpin="at-speed" size="12" on_color="green" off_color="red"/>
     <tablerow/>
         <label text="'\nParameters:'"/>
-    <!-- User parameters start here-->
     <tablerow/>
-        <label text="P00.00"/>
-        <u32 halpin="P00.00"/>
-    <tablerow/>
-        <label text="P00.01"/>
-        <u32 halpin="P00.01"/>
-    <!--  User parameters end -->
-
+        <label text="Acc time in s"/>
+    <scale>
+        <font>("Helvetica",10)</font>
+        <width>"20"</width>
+        <halpin>"acc"</halpin>
+        <resolution>0.1</resolution>
+        <orient>HORIZONTAL</orient>
+        <initval>5</initval>
+        <min_>3</min_>
+        <max_>15</max_>
+        <param_pin>0</param_pin>
+    </scale>
     <tablerow/>
         <label text="'\nRS485:'"/>
     <tablerow/>
         <label text="Is connected"/>
         <led halpin="is-connected" size="12" on_color="green" off_color="red"/>
-    <tablerow/>
-        <label text="Error count"/>
-        <s32 halpin="error-count"/>
-    <tablerow/>
-        <label text="Last error"/>
-        <s32 halpin="last-error"/>
     </table>
-
 </labelframe>
 </pyvcp>
