@@ -48,7 +48,7 @@ addf and2.13 		      servo-thread
 # Digital input signals
 
 #net M64-and-in  motion.digital-out-00 and2.13.in0
-net digital-signal motion.digital-out-05 and2.13.in0
+net digital-signal motion.digital-out-04 and2.13.in0
 
 
 # --- HOME-X ---
