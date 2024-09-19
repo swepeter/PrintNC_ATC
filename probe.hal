@@ -1,0 +1,69 @@
+#  ---probe signal or tool height sensor---
+loadrt or2 count=1
+loadrt debounce cfg=2
+addf or2.0  servo-thread
+addf debounce.0 servo-thread
+setp debounce.0.delay 50
+
+
+# disable on cutting
+loadrt demux personality=7
+#loadrt conv_s32_u32 names=probe_s32_u32
+loadrt and2 count=1
+loadrt timedelay
+
+addf demux.0  servo-thread
+addf probe_s32_u32  servo-thread
+addf and2.0 servo-thread
+addf timedelay.0 servo-thread
+
+setp timedelay.0.on-delay 0
+setp timedelay.0.off-delay 1
+
+net m-type motion.motion-type probe_s32_u32.in
+net m-type-u probe_s32_u32.out demux.0.sel-u32
+net probing demux.0.out-05 timedelay.0.in 
+net probing-delayed timedelay.0.out and2.0.in0
+
+
+# vers probe
+net db-3dprobe-in debounce.0.0.in [HMOT](CARD0).inmux.00.input-06
+net 3dprobe-in debounce.0.0.out
+net 3dprobe-in => or2.0.in0
+
+#   ----Tool setter
+net db-toolsetter-in debounce.0.1.in [HMOT](CARD0).inmux.00.input-05-not
+net toolsetter-in debounce.0.1.out
+net toolsetter-in => or2.0.in1
+
+#net 3dprobe-or-toolsetter <= or2.0.out => motion.probe-input
+
+
+# ----- Disable on cutting
+net 3dprobe-or-toolsetter <= or2.0.out => and2.0.in1
+net checked-probe and2.0.out motion.probe-input
+
+
+
+# ----- Versa probe -----
+#net spindle-speed-limited  =>  spindle.0.speed-out-rps => spindle.0.speed-in
+
+# the unlink pin commands are only used, because they are connected 
+# in core_sim.hal and we use this file to simulate
+#unlinkp iocontrol.0.tool-change
+#unlinkp iocontrol.0.tool-changed
+#unlinkp iocontrol.0.tool-prep-number
+
+#net tool-change      hal_manualtoolchange.change   <=  iocontrol.0.tool-change 
+#net tool-changed     hal_manualtoolchange.changed  <=  iocontrol.0.tool-changed
+#net tool-prep-number hal_manualtoolchange.number   <=  iocontrol.0.tool-prep-number
+
+# external offset spindle auto raise on pause
+net spindle-pause     qtdragon.spindle-inhibit       =>   spindle.0.inhibit
+net eoffset_clear     qtdragon.eoffset-clear         =>   axis.z.eoffset-clear
+net eoffset_count     qtdragon.eoffset-spindle-count =>   axis.z.eoffset-counts
+#net eoffset           qtdragon.eoffset-value         <=   axis.z.eoffset
+#net eoffset-state     qtdragon.eoffset-is-active     <=   motion.eoffset-active
+
+#setp axis.z.eoffset-enable 1
+#setp axis.z.eoffset-scale 1.0

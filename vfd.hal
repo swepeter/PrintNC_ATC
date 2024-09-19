@@ -1,14 +1,70 @@
-loadusr -Wn vfd hy_vfd -n vfd -d /dev/ttyUSB0 -p none -r 19200
-# Replace ttyUSB0 with the address of your adapter
+loadrt conv_s32_u32 names=vdf-status-conv,probe_s32_u32 # Shared with probe
+loadrt bitslice names=vfd-status personality=8
+loadrt weighted_sum wsum_sizes=8
+loadrt not
+loadrt scale names=rpm-to-hz,hz-to-rps
 
-setp vfd.enable 1 # This enables the VFD in the driver
-net spindle-speed spindle.0.speed-out => vfd.speed-command
-net spindle-cw spindle.0.forward => vfd.spindle-forward
-net spindle-ccw spindle.0.reverse => vfd.spindle-reverse
-net spindle-on spindle.0.on => vfd.spindle-on
-net spindle-speed-fb => vfd.spindle-speed-fb
-net spindle-current <= vfd.OutA
-net spindle-comm-ok <= vfd.hycomm-ok
+loadusr -Wn fr720s mb2hal config=mb2hal_fr720s.ini
 
-net spindle-at-speed => vfd.spindle-at-speed
-net spindle-at-speed <= spindle.0.at-speed
+addf vdf-status-conv servo-thread
+addf vfd-status servo-thread
+addf process_wsums servo-thread
+addf not.0 servo-thread
+addf rpm-to-hz servo-thread
+addf hz-to-rps servo-thread
+
+net vfd-status-s32 <= fr720s.get-vfd-status.00.int
+net vfd-status-s32 vdf-status-conv.in
+
+net vfd-status-u32 <= vdf-status-conv.out
+net vfd-status-u32 vfd-status.in
+
+
+# Extract bits 1, 4, and 6
+net vfd-status-run <= vfd-status.out-00
+net vfd-status-fwd <= vfd-status.out-01
+net vfd-status-rev <= vfd-status.out-02
+net vfd-status-at-speed <= vfd-status.out-03
+net vfd-status-fault <= vfd-status.out-07
+
+# Set the scale parameters
+setp rpm-to-hz.gain 1.66666666
+setp rpm-to-hz.offset 0
+
+setp hz-to-rps.gain 0.01
+setp hz-to-rps.offset 0
+
+
+
+# Get HZ from rpm (to set vfd freq)
+net spindle-vel-cmd-rpm rpm-to-hz.in
+net vfd-freq-in <= rpm-to-hz.out
+
+# Get RPS from vfd
+net vfd-freq <= fr720s.get-freq.00.float
+net vfd-freq => hz-to-rps.in
+net vfd-rps <= hz-to-rps.out
+
+net spindle-enable => not.0.in
+
+net spin-stop <= not.0.out => wsum.0.bit.0.in
+net spindle-cw  => wsum.0.bit.1.in
+net spindle-ccw => wsum.0.bit.2.in
+
+net vfd-status-in <= wsum.0.sum
+
+net vfd-amps <= fr720s.get-amps.00.float
+
+
+# Set the linuxcnc params
+net vfd-status-at-speed => spindle.0.at-speed
+net vfd-amps => qtdragon.spindle-amps
+setp qtdragon.spindle-volts 2.0
+net vfd-rps => spindle.0.speed-in
+
+#spindle.0.speed-in
+
+
+# Set the VFD params
+net vfd-freq-in => fr720s.set-freq.00.float
+net vfd-status-in => fr720s.set-vfd-status.00.int
