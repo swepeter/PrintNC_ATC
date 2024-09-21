@@ -1,22 +1,133 @@
 connectors:
-  B1-1: 
-    <<: *Phoenix-3x
-    pins: [L1, L2, L3, L4, L5, L6]
-    notes: 110V Line dist block
-    #loops: 
-    #  - [3,2]
-    #  - [3,1]
-  B1-2: 
-    pins: [L1, L2, L3, L4, L5, L6]
-    notes: 110V Line dist block
-    #loops: 
-    #  - [3,2]
-    #  - [3,1]
+  Power12V: 
+    pinlabels: [V+ , GND]
+    type: PWS 12V
+  Aviation-Plug-M-2:
+    pinlabels: [L1, L2]
+    type: Aviation Plug 2 pin
+    subtype: male
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-M-4:
+    pinlabels: [L1, L2, L3, L4]
+    type: Aviation Plug 4 pin
+    subtype: male
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-M-6:
+    pinlabels: [L1, L2, L3, L4, L5, L6]
+    type: Aviation Plug 6 pin
+    subtype: male
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-F-2:
+    pinlabels: [L1, L2]
+    type: Aviation Plug 2 pin
+    subtype: female
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-F-4:
+    pinlabels: [L1, L2, L3, L4]
+    type: Aviation Plug 4 pin
+    subtype: female
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-F-6:
+    pinlabels: [L1, L2, L3, L4, L5, L6]
+    type: Aviation Plug 6 pin
+    subtype: female
+    notes: Male plug Aviation plug 2 pin  # add notes
+  X1: &template_con
+    pinlabels: [GND, VCC, SCL, SDA]
+    type: Molex KK 254
+    subtype: male
+    notes: to microcontroller # add notes
+  AirValves :
+    pinlabels: [A1+, A1-, A2+, A2-, A3+, A3-, A4+, A4-]
+    type: pneumatisk 4 magnetventil
+    subtype: male
+    notes: pneumatisk 4 magnetventil  # add notes
+  C1-Mesa: 
+    hide_disconnected_pins: true
+    pins: 
+      # PWR
+      - TB6.PWR
+      - TB6.GND
+
+      # Z Stepper
+      - TB10.Z.G
+      - TB10.Z.S+
+      - TB10.Z.S-
+      - TB10.Z.D+
+      - TB10.Z.D-
+      - TB10.Z.5v
+
+      # Y2 Stepper
+      - TB9.Y2.G
+      - TB9.Y2.S+
+      - TB9.Y2.S-
+      - TB9.Y2.D+
+      - TB9.Y2.D-
+      - TB9.Y2.5v
+
+      # Y1 Stepper
+      - TB8.Y1.G
+      - TB8.Y1.S+
+      - TB8.Y1.S-
+      - TB8.Y1.D+
+      - TB8.Y1.D-
+      - TB8.Y1.5v
+
+      # X Stepper
+      - TB7.X.G
+      - TB7.X.S+
+      - TB7.X.S-
+      - TB7.X.D+
+      - TB7.X.D-
+      - TB7.X.5v
+
+      # Inputs Commons
+      #- TB2.IC0
+      #- TB2.IC1
+      # Inputs
+      - TB3.In1
+      - TB3.In2
+      - TB3.In3
+      - TB3.In4
+      - TB3.In5
+      - TB3.In6
+      - TB3.In7
+      - TB3.In8
+      - TB3.In9
+      - TB3.In10
+      - TB3.InC
+
+      # Output
+      - TB3.O0+
+      - TB3.O0-
+      - TB3.O1+
+      - TB3.O1-
+      - TB3.O2+
+      - TB3.02-
+      - TB3.O3+
+      - TB3.O3-
+      - TB3.O4+
+      - TB3.O4-
+      - TB3.O5+
+      - TB3.O5-
+  
 
 
 cables:
-  WAIR1:
+  CAT6-1:
     <<: *RJ45
+    notes: This cable is from the MESA to the cabinet
+  WAIR2:
+    wirecount: 1
+    colors: [BK]
+    notes: This Cable is from the cabinet to the AIR vents
+  WAIR3:
+    wirecount: 1
+    colors: [RD]
+    notes: This Cable is from the cabinet to the AIR vents
+  CAT6-4:
+    <<: *RJ45
+    notes: This Cable is from the cabinet to the AIR vents
   W1: 
     <<: *RJ45
     length: 0.3
@@ -30,8 +141,24 @@ cables:
 
 connections:
   -
-    - B1-1: [L1]
-    - WAIR1: [1]
+    - C1-Mesa: [TB3.O0+, TB3.O1+, TB3.O2+, TB3.O3+]
+    - CAT6-1: [1, 2, 3, 4]
+    - Aviation-Plug-M-6: [L1, L2, L3, L4]
+  -
+    - C1-Mesa: [TB3.O0-, TB3.O1-, TB3.02-, TB3.O3-]
+    - WAIR2: [1, 1, 1, 1]
+    - Power12V: [GND, GND, GND, GND]
+  - 
+    - Power12V: [V+]
+    - WAIR3: [1]
+    - Aviation-Plug-M-6: [6]
+  - 
+    - Aviation-Plug-M-6: [L1, L2, L3, L4]
+    - CAT6-4: [1, 2, 3, 4]
+    - AirValves: [A1-, A2-, A3-, A4-]
+
+
+
 
 
 
