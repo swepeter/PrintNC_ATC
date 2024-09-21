@@ -1,0 +1,114 @@
+templates:
+  X:
+    style: simple
+    autogenerate: true
+    type: ""
+    ignore_in_bom: true
+  MagContactor: &MagContactor
+    manufacturer: Siemens
+    pins: [A1, A2, 2/T1, 4/T2, 6/T3, 1/L1, 3/L2, 5/L3, 13, 14]
+    hide_disconnected_pins: true
+
+  Phoenix-3x: &Phoenix-3x
+    type: Distribution Block
+    subtype: Din
+    manufacturer: Phoenix
+    hide_disconnected_pins: true
+  DinDist-1x6: &DinDist-1x6 
+    type: Distribution Block
+    subtype: Din
+    manufacturer: Wago
+    pins: [L1, L2, L3, L4, L5, L6]
+    hide_disconnected_pins: true
+  DinDist-2x6: &DinDist-2x6 
+    type: Distribution Block
+    subtype: Din
+    manufacturer: Wago
+    pins: [L1, N1, L2, N2, L3, N3, L4, N4, L5, N5, L6, N6]
+    hide_disconnected_pins: true
+  RJ45-Panel: &RJ45-Panel
+    # autogenerate: true
+    type: ""
+    ignore_in_bom: true
+    pincount: 8
+    hide_disconnected_pins: true
+  
+  StepperMotor: &StepperMotor
+    type: Stepper Motor
+    pins: [L, G, Stp-, Stp+, Dir-, Dir+, Err-, Err+]
+    hide_disconnected_pins: true
+
+  AirRelay: &AirRelay
+    type: AirRelay
+    pins: [L, G]
+    hide_disconnected_pins: true
+
+  Lj8a3: &Lj8a3
+    type: EndStop
+    subtype: Proximity sensor
+    mpn: M8 Lj8a3-2-Z-AX
+    pins: [Pwr, Gnd, Sig]
+
+  Probe: &Probe
+    type: Probe
+    subtype: TomCat Probe
+    pins: [Pwr, Gnd, Sig]
+
+  VersProbe: &VersProbe
+    type: Probe
+    subtype: Vers Probe
+    pins: [Pwr, Gnd, Sig, Err]
+
+
+
+connectors:
+  Aviation-Plug-M-2:
+    pinlabels: [L1, L2]
+    type: Aviation Plug 2 pin
+    subtype: male
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-M-4:
+    pinlabels: [L1, L2, L3, L4]
+    type: Aviation Plug 4 pin
+    subtype: male
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-M-6:
+    pinlabels: [L1, L2, L3, L4, L5, L6]
+    type: Aviation Plug 6 pin
+    subtype: male
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-F-2:
+    pinlabels: [L1, L2]
+    type: Aviation Plug 2 pin
+    subtype: female
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-F-4:
+    pinlabels: [L1, L2, L3, L4]
+    type: Aviation Plug 4 pin
+    subtype: female
+    notes: Male plug Aviation plug 2 pin  # add notes
+  Aviation-Plug-F-6:
+    pinlabels: [L1, L2, L3, L4, L5, L6]
+    type: Aviation Plug 6 pin
+    subtype: female
+    notes: Male plug Aviation plug 2 pin  # add notes
+  X1: &template_con
+    pinlabels: [GND, VCC, SCL, SDA]
+    type: Molex KK 254
+    subtype: male
+    notes: to microcontroller # add notes
+  X2:
+    <<: *template_con # use template
+    subtype: female   # but override certain parameters
+    notes: to accelerometer
+  X3:
+    <<: *template_con
+    subtype: female
+    notes: to temperature sensor
+
+cables:
+  RJ45: &RJ45
+    wirecount: 8
+    colors: [WHOG, OG, WHGN, BU, WHBU, GN, WHBN, BN]
+    length: 2.1
+    shield: true

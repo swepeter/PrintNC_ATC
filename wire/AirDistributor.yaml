@@ -1,0 +1,38 @@
+connectors:
+  B1-1: 
+    <<: *Phoenix-3x
+    pins: [L1, L2, L3, L4, L5, L6]
+    notes: 110V Line dist block
+    #loops: 
+    #  - [3,2]
+    #  - [3,1]
+  B1-2: 
+    pins: [L1, L2, L3, L4, L5, L6]
+    notes: 110V Line dist block
+    #loops: 
+    #  - [3,2]
+    #  - [3,1]
+
+
+cables:
+  WAIR1:
+    <<: *RJ45
+  W1: 
+    <<: *RJ45
+    length: 0.3
+    gauge: 24 AWG # specify gauge in AWG directly
+    color_code: IEC # IEC 62 colors also supported
+    notes: This cable is a bit longer
+  W2:
+    <<: *RJ45
+    length: 0.1
+    notes: This cable is a bit shorter
+
+connections:
+  -
+    - B1-1: [L1]
+    - WAIR1: [1]
+
+
+
+
